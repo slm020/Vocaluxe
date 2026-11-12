@@ -7,6 +7,13 @@
 [![Feature requests](https://img.shields.io/github/issues-raw/vocaluxe/vocaluxe/feature%20request.svg?label=feature%20requests&colorB=007ec6)](https://github.com/Vocaluxe/Vocaluxe/labels/feature%20request)
 [![License](https://img.shields.io/badge/licence-GPLv3-blue.svg)](https://github.com/Vocaluxe/Vocaluxe/blob/develop/LICENSE.txt)
 
+## Quick install on Linux (x64)
+- Install the libraries: `sudo apt install libportaudio2 libhidapi-libusb0` (Fedora: `sudo dnf install portaudio hidapi`, Arch: `sudo pacman -S portaudio hidapi`)
+- Download: `curl -L -o Vocaluxe_Linux_x64.tar.gz https://github.com/slm020/Vocaluxe/releases/latest/download/Vocaluxe_Linux_x64.tar.gz`
+- Unpack: `mkdir -p ~/.local/opt/Vocaluxe && tar xzf Vocaluxe_Linux_x64.tar.gz -C ~/.local/opt/Vocaluxe --strip-components=1`
+- Add to the app menu (optional): `~/.local/opt/Vocaluxe/install-desktop-entry.sh`
+- Play: `~/.local/opt/Vocaluxe/vocaluxe.sh` (plug in USB microphones first, add song folders in Options -> Game)
+
 [1. About](#1-about)
 [2. Download](#2-download)
 [3. Contributing](#3-contributing)
