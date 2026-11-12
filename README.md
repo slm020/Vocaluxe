@@ -14,6 +14,8 @@
 - Add to the app menu (optional): `~/.local/opt/Vocaluxe/install-desktop-entry.sh`
 - Play: `~/.local/opt/Vocaluxe/vocaluxe.sh` (plug in USB microphones first, add song folders in Options -> Game)
 
+Good to know: the package needs nothing else (it bundles .NET and FFmpeg). Settings and logs are in `~/.config/Vocaluxe` (check `Logs/Vocaluxe.log` if something fails). Package page: [Releases](https://github.com/slm020/Vocaluxe/releases/latest). Want to build it yourself? See [HowToBuildLinux.md](HowToBuildLinux.md).
+
 [1. About](#1-about)
 [2. Download](#2-download)
 [3. Contributing](#3-contributing)
