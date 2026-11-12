@@ -20,7 +20,7 @@ Vocaluxe offers diversified party modes and can optionally be controlled via a b
 
 Supported Operating Systems / Requirements:
 - Windows 7, Windows 8, Windows 8.1, Windows 10 and Windows 11 with .NET 4.0
-- *Linux* (no official support)
+- Linux x64 (see [Install on Linux](#install-on-linux))
 - 1 GHz CPU, 512 MB RAM, Graphics card with OpenGL 2.1 or DirectX 9.0 support
 - Visual C++ Redistributable Package 2010
 
@@ -32,6 +32,23 @@ Supported Operating Systems / Requirements:
 ## 2. Download
 You can download precompiled Windows binaries at here:
 https://vocaluxe.org/#download
+
+### Install on Linux
+Fresh install from the ready-made package (it brings its own .NET runtime and FFmpeg 8):
+
+- Install the two system libraries:
+  - Debian / Ubuntu / Mint: `sudo apt install libportaudio2 libhidapi-libusb0`
+  - Fedora: `sudo dnf install portaudio hidapi`
+  - Arch / Manjaro: `sudo pacman -S portaudio hidapi`
+  - openSUSE: `sudo zypper install libportaudio2 libhidapi-libusb0`
+- Download the package: `curl -L -o Vocaluxe_Linux_x64.tar.gz https://github.com/slm020/Vocaluxe/releases/latest/download/Vocaluxe_Linux_x64.tar.gz`
+- Unpack it: `mkdir -p ~/.local/opt/Vocaluxe && tar xzf Vocaluxe_Linux_x64.tar.gz -C ~/.local/opt/Vocaluxe --strip-components=1`
+- Optional, add it to the application menu: `~/.local/opt/Vocaluxe/install-desktop-entry.sh`
+- Start it: `~/.local/opt/Vocaluxe/vocaluxe.sh`
+- Plug in USB microphones before starting, add your song folders under Options -> Game
+- Settings and logs live in `~/.config/Vocaluxe`
+
+Or build it yourself: see [HowToBuildLinux.md](HowToBuildLinux.md).
 
 ## 3. Contributing
 You want to fix a bug or add a cool new feature to Vocaluxe? Awesome!
