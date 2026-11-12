@@ -102,11 +102,18 @@ namespace Vocaluxe.Lib.Video.FFmpeg
                 return Path.Combine(baseDirectory, "libs", "unmanaged", folder);
             }
 
+            // Bundled libraries first, then the usual system locations
             var candidates = new[]
             {
                 Path.Combine(baseDirectory, "libs", "unmanaged", folder),
                 Path.Combine(baseDirectory, "libs", "unmanaged"),
                 baseDirectory,
+                "/usr/lib64",
+                "/usr/lib/x86_64-linux-gnu",
+                "/usr/lib/aarch64-linux-gnu",
+                "/usr/lib",
+                "/usr/local/lib64",
+                "/usr/local/lib",
                 "/opt/homebrew/opt/ffmpeg@8/lib",
                 "/usr/local/opt/ffmpeg@8/lib"
             };

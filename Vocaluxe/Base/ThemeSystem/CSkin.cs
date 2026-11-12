@@ -175,7 +175,9 @@ namespace Vocaluxe.Base.ThemeSystem
             // load skins/textures
             foreach (var kvp in _Data.Skins)
             {
-                var texture = CDraw.AddTexture(Path.Combine(_Folder, kvp.Value));
+                var textureFileName = kvp.Value;
+                CHelper.TryResolveFileName(_Folder, ref textureFileName);
+                var texture = CDraw.AddTexture(Path.Combine(_Folder, textureFileName));
                 if (texture == null)
                 {
                     CLog.Error("Error on loading texture \"" + kvp.Key + "\": " + kvp.Value, true);
@@ -188,12 +190,14 @@ namespace Vocaluxe.Base.ThemeSystem
             // load videos
             foreach (var kvp in _Data.Videos)
             {
-                var sk = new CVideoSkinElement { FileName = kvp.Value };
-                if (!File.Exists(Path.Combine(_Folder, sk.FileName)))
+                var fileName = kvp.Value;
+                if (!CHelper.TryResolveFileName(_Folder, ref fileName))
                 {
-                    CLog.Error("Video \"" + kvp.Key + "\": (" + sk.FileName + ") not found!");
+                    CLog.Error("Video \"" + kvp.Key + "\": (" + fileName + ") not found!");
                     continue;
                 }
+
+                var sk = new CVideoSkinElement { FileName = fileName };
 
                 _Videos.Add(kvp.Key, sk);
             }

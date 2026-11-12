@@ -54,7 +54,9 @@ namespace Vocaluxe
                 return;
             }
 
-            _Window = SDL3.SDL_CreateWindow(CSettings.ProgramName, _Logo.Width, _Logo.Height, SDL_WindowFlags.SDL_WINDOW_BORDERLESS | SDL_WindowFlags.SDL_WINDOW_HIDDEN);
+            // Utility window: not a regular application window, so window managers (and their "remember window geometry" features) don't mix it up with the main window
+            _Window = SDL3.SDL_CreateWindow(CSettings.ProgramName, _Logo.Width, _Logo.Height,
+                SDL_WindowFlags.SDL_WINDOW_BORDERLESS | SDL_WindowFlags.SDL_WINDOW_HIDDEN | SDL_WindowFlags.SDL_WINDOW_UTILITY);
             if (_Window == null)
             {
                 CLog.Error("Error creating the splash screen: " + SDL3.SDL_GetError());

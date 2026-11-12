@@ -373,6 +373,18 @@ void main()
             SDL3.SDL_GL_DestroyContext(_Context);
         }
 
+        public override void MainLoop()
+        {
+            // The splash screen draws through SDL's window surface which may use its own OpenGL context (X11, Wayland).
+            // Creating/destroying it changes the current context, so make sure ours is current again before rendering.
+            if (!SDL3.SDL_GL_MakeCurrent(_Window, _Context))
+            {
+                CLog.Error("Could not activate the OpenGL context: " + SDL3.SDL_GetError());
+            }
+
+            base.MainLoop();
+        }
+
         protected override void _OnBeforeDraw()
         {
             GL.UseProgram(_Program);

@@ -1,6 +1,6 @@
 # Build, test and release Vocaluxe (replaces appveyor.yml)
 #
-# - pull requests:          build + test x64/x86, ZIPs as workflow artifacts
+# - pull requests:          build + test x64/x86 (Windows) and build x64 (Linux), ZIPs/tar.gz as workflow artifacts
 #                           (installer only with "[build installer]" in the latest commit message)
 # - push to develop:        + installers, "Nightly" tag/release is moved to this commit
 # - push of any other tag:  + GitHub release for that tag (prerelease if the tag contains alpha/beta/rc)
@@ -221,9 +221,72 @@ jobs:
           path: msbuild.binlog
           if-no-files-found: ignore
 
+  build-linux:
+    name: Linux x64
+    # oldest supported runner: the native PitchTracker library then also runs on older distributions (glibc)
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # full history and tags for "git describe"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: WebApp/package-lock.json
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Build.props', 'NuGet.Config') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Prepare build variables
+        id: vars
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          REPOSITORY: ${{ github.repository }}
+          OWNER: ${{ github.repository_owner }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          # same naming as the Windows builds
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            name="PR$PR_NUMBER"
+          else
+            name="$(echo "$REF_NAME" | sed 's/[^A-Za-z0-9._-]/-/g')"
+            if [ "$REPOSITORY" = "Vocaluxe/Vocaluxe" ] && [ "$EVENT_NAME" = "push" ] && [ "$REF_NAME" = "develop" ]; then
+              name="Nightly"
+            fi
+          fi
+          suffix=""
+          if [ "$REPOSITORY" != "Vocaluxe/Vocaluxe" ]; then suffix="_non-official-by-$OWNER"; fi
+          echo "package=Vocaluxe_${name}_Linux_x64${suffix}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and package
+        run: .build/linuxPackage.sh "${{ steps.vars.outputs.package }}"
+
+      - name: Upload build
+        uses: actions/upload-artifact@v7
+        with:
+          name: linux-x64
+          path: dist/*.tar.gz
+          if-no-files-found: error
+          compression-level: 0 # already compressed
+
   release:
     name: Release
-    needs: build
+    needs: [build, build-linux]
     if: >-
       github.repository == 'Vocaluxe/Vocaluxe' && github.event_name == 'push' &&
       (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/develop')
@@ -243,7 +306,7 @@ jobs:
       - name: Download builds
         uses: actions/download-artifact@v8
         with:
-          pattern: windows-*
+          pattern: '{windows,linux}-*'
           merge-multiple: true
           path: dist
 

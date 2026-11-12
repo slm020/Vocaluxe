@@ -326,6 +326,68 @@ namespace VocaluxeLib
         }
 
         /// <summary>
+        ///     Resolves a file name that is relative to a folder.<br />
+        ///     Songs and themes are mostly created on Windows where file names are case-insensitive (and may use '\' as separator).
+        ///     On case-sensitive file systems this falls back to a case-insensitive search so those references still work.
+        /// </summary>
+        /// <param name="folder">Folder the name is relative to</param>
+        /// <param name="name">Relative file name, is replaced by the real name if it differs</param>
+        /// <returns>True if the file exists</returns>
+        public static bool TryResolveFileName(string folder, ref string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return false;
+            }
+
+            if (File.Exists(Path.Combine(folder, name)))
+            {
+                return true;
+            }
+
+            if (OperatingSystem.IsWindows())
+            {
+                return false;
+            }
+
+            var parts = name.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+            var current = folder;
+            try
+            {
+                for (var i = 0; i < parts.Length; i++)
+                {
+                    var part = parts[i];
+                    if (part != "." && part != ".." && !File.Exists(Path.Combine(current, part)) && !Directory.Exists(Path.Combine(current, part)))
+                    {
+                        var match = Directory.EnumerateFileSystemEntries(current)
+                            .Select(Path.GetFileName)
+                            .FirstOrDefault(entry => string.Equals(entry, part, StringComparison.OrdinalIgnoreCase));
+                        if (match == null)
+                        {
+                            return false;
+                        }
+
+                        parts[i] = match;
+                    }
+
+                    current = Path.Combine(current, parts[i]);
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            if (!File.Exists(current))
+            {
+                return false;
+            }
+
+            name = Path.Combine(parts);
+            return true;
+        }
+
+        /// <summary>
         ///     Returns a filename that is unique in that path
         /// </summary>
         /// <param name="path">Path in which the file should be stored</param>

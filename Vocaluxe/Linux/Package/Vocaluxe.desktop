@@ -2,11 +2,11 @@
 Type=Application
 Version=1.0
 Name=Vocaluxe
-Keywords=game;party;singing;
+Keywords=game;party;singing;karaoke;
 GenericName=Karaoke
 Icon=INSTALLPATH/Vocaluxe.ico
 Path=INSTALLPATH
-Exec=mono INSTALLPATH/Vocaluxe.exe %U
+Exec=INSTALLPATH/vocaluxe.sh %U
 Terminal=false
 StartupNotify=false
 Categories=Game;

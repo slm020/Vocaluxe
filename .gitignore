@@ -84,3 +84,4 @@ tx.exe
 *.orig
 *.DotSettings
 .DS_Store
+/dist

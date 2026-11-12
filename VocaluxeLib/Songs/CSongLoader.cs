@@ -194,7 +194,7 @@ namespace VocaluxeLib.Songs
                                 break;
                             case "MP3":
                             case "AUDIO":
-                                if (File.Exists(Path.Combine(_Song.Folder, value)))
+                                if (CHelper.TryResolveFileName(_Song.Folder, ref value))
                                 {
                                     _Song.Audio = value;
                                     headerFlags |= EHeaderFlags.MP3;
@@ -207,7 +207,7 @@ namespace VocaluxeLib.Songs
 
                                 break;
                             case "INSTRUMENTAL":
-                                if (File.Exists(Path.Combine(_Song.Folder, value)))
+                                if (CHelper.TryResolveFileName(_Song.Folder, ref value))
                                 {
                                     _Song.Instrumental = value;
                                     headerFlags |= EHeaderFlags.Instrumental;
@@ -221,7 +221,7 @@ namespace VocaluxeLib.Songs
 
                                 break;
                             case "VOCALS":
-                                if (File.Exists(Path.Combine(_Song.Folder, value)))
+                                if (CHelper.TryResolveFileName(_Song.Folder, ref value))
                                 {
                                     _Song.Vocals = value;
                                     headerFlags |= EHeaderFlags.Vocals;
@@ -298,7 +298,7 @@ namespace VocaluxeLib.Songs
 
                                 break;
                             case "COVER":
-                                if (File.Exists(Path.Combine(_Song.Folder, value)))
+                                if (CHelper.TryResolveFileName(_Song.Folder, ref value))
                                 {
                                     _Song.Cover = value;
                                 }
@@ -309,7 +309,7 @@ namespace VocaluxeLib.Songs
 
                                 break;
                             case "BACKGROUND":
-                                if (File.Exists(Path.Combine(_Song.Folder, value)))
+                                if (CHelper.TryResolveFileName(_Song.Folder, ref value))
                                 {
                                     _Song.BackgroundFileNames.Add(value);
                                 }
@@ -321,7 +321,7 @@ namespace VocaluxeLib.Songs
 
                                 break;
                             case "VIDEO":
-                                if (File.Exists(Path.Combine(_Song.Folder, value)))
+                                if (CHelper.TryResolveFileName(_Song.Folder, ref value))
                                 {
                                     _Song.Video = value;
                                 }
