@@ -50,6 +50,9 @@ cp -a Output/. "$STAGE/"
 # user data of a local test run and debug symbols of third-party libraries
 rm -f "$STAGE/Config.xml" "$STAGE/CoverDB.sqlite" "$STAGE/HighscoreDB.sqlite"
 find "$STAGE" -name '*.pdb' ! -name 'Vocaluxe*' -delete
+# outdated theme (theme system version 5, current is 9) that older Output folders still contain: it would
+# show an error message on every first start
+rm -rf "$STAGE/Themes/Ambient" "$STAGE/Themes/Ambient.xml"
 mkdir -p "$STAGE/Linux/Package"
 cp Vocaluxe/Linux/Package/Vocaluxe.desktop "$STAGE/Linux/Package/"
 cp Vocaluxe/Linux/Package/vocaluxe.sh Vocaluxe/Linux/Package/install-desktop-entry.sh Vocaluxe/Linux/Package/README-Linux.txt "$STAGE/"
