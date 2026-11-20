@@ -349,12 +349,15 @@ void main()
 
         public override void Close()
         {
-            base.Close();
+            // Free GL objects while the context and window still exist. Destroying the window first can unload
+            // the GL driver library, and the GL.Delete* calls would then jump into unmapped memory (SIGSEGV on exit)
             if (_Context == null)
             {
+                base.Close();
                 return;
             }
 
+            SDL3.SDL_GL_MakeCurrent(_Window, _Context);
             GL.DeleteFramebuffer(_FBO);
             GL.DeleteFramebuffer(_ResolveFBO);
             if (_ResolveTexture != 0)
@@ -371,6 +374,7 @@ void main()
                 GL.DeleteProgram(_YuvProgram);
             }
             SDL3.SDL_GL_DestroyContext(_Context);
+            base.Close();
         }
 
         public override void MainLoop()
